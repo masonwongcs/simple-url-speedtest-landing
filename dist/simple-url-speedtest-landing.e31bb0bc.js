@@ -11203,24 +11203,64 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"../../node/lib/node_modules/parcel-bundler/node_modules/process/browser.js"}],"node_modules/simple-url-speedtest/lib/speed.js":[function(require,module,exports) {
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports["default"]=void 0;var calculateSpeed=function(a){return new Promise(function(b){var c,d,e=new Image;c=Date.now(),e.src=a+"/"+Math.random(),e.onerror=function(){d=Date.now();var e=d-c;b({url:a,ping:e})}})},_default=function(a,b){var c=a.map(function(a){return calculateSpeed(a)});Promise.all(c).then(function(a){b(a)})};exports["default"]=_default;
-},{}],"node_modules/simple-url-speedtest/lib/index.js":[function(require,module,exports) {
-"use strict";var SpeedTest=require("./speed");/**
+},{"process":"../../node/lib/node_modules/parcel-bundler/node_modules/process/browser.js"}],"../speedtest-js/src/speed.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var calculateSpeed = function calculateSpeed(url) {
+  return new Promise(function (resolve) {
+    var image = new Image();
+    var startTime, endTime;
+    startTime = Date.now();
+    image.src = url + "/" + Math.random();
+
+    image.onerror = function () {
+      endTime = Date.now();
+      var ping = endTime - startTime;
+      resolve({
+        url: url,
+        ping: ping
+      });
+    };
+  });
+};
+
+var _default = function _default(urlArr, callback) {
+  if (callback) {
+    Promise.all(urlArr.map(calculateSpeed)).then(function (data) {
+      callback(data);
+    });
+  } else {
+    return Promise.all(urlArr.map(calculateSpeed));
+  }
+};
+
+exports.default = _default;
+},{}],"../speedtest-js/src/index.js":[function(require,module,exports) {
+var SpeedTest = require("./speed");
+/**
  * Parse in Array of urls
  * Callback ping in ms
  *
  * @type {function(urlArr, callback)}
- */module.exports=SpeedTest;
-},{"./speed":"node_modules/simple-url-speedtest/lib/speed.js"}],"index.js":[function(require,module,exports) {
+ */
+
+
+module.exports = SpeedTest;
+},{"./speed":"../speedtest-js/src/speed.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
-var _simpleUrlSpeedtest = _interopRequireDefault(require("simple-url-speedtest"));
+var _src = _interopRequireDefault(require("../speedtest-js/src"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import SpeedTest from "simple-url-speedtest";
 var speedArr = ["https://www.facebook.com", "https://www.google.com", "https://www.apple.com", "https://www.cnn.com", "https://www.whatsapp.com", "https://www.yahoo.com", "https://www.samsung.com", "https://www.lg.com"];
 
 function runTest() {
@@ -11233,7 +11273,7 @@ function runTest() {
     return "<div class=\"speed-item\">&nbsp;</div>";
   }).join("");
   speedContainer.html((0, _jquery.default)(dummyData));
-  (0, _simpleUrlSpeedtest.default)(speedArr, function (data) {
+  (0, _src.default)(speedArr).then(function (data) {
     var sortedData = data.sort(function (a, b) {
       return a.ping - b.ping;
     });
@@ -11269,7 +11309,7 @@ function setVersion() {
     runTest();
   });
 });
-},{"jquery":"node_modules/jquery/dist/jquery.js","simple-url-speedtest":"node_modules/simple-url-speedtest/lib/index.js"}],"../../node/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"jquery":"node_modules/jquery/dist/jquery.js","../speedtest-js/src":"../speedtest-js/src/index.js"}],"../../node/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -11297,7 +11337,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63686" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58957" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

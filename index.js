@@ -22,7 +22,7 @@ function runTest() {
     .join("");
   speedContainer.html($(dummyData));
 
-  SpeedTest(speedArr, (data) => {
+  SpeedTest(speedArr).then((data) => {
     const sortedData = data.sort((a, b) => a.ping - b.ping);
     const highestPing = sortedData[sortedData.length - 1].ping;
 
